@@ -1,6 +1,6 @@
 package lotto.model;
 
-import lotto.Lotto;
+import java.util.List;
 
 public class WinningNumbers {
 
@@ -10,5 +10,13 @@ public class WinningNumbers {
     public WinningNumbers(Lotto lotto, Bonus bonus) {
         this.lotto = lotto;
         this.bonus = bonus;
+    }
+
+    public int countMatchingNumbers(List<Integer> ticketNumbers) {
+        return lotto.countMatchingNumbers(ticketNumbers);
+    }
+
+    public boolean hasBonusNumber(List<Integer> ticketNumbers) {
+        return bonus.hasBonusNumbers(ticketNumbers);
     }
 }

@@ -1,5 +1,6 @@
 package lotto.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
@@ -21,4 +22,37 @@ class LottoTest {
     }
 
     // TODO: 추가 기능 구현에 따른 테스트 코드 작성
+    @DisplayName("모든 번호가 일치하면 6을 반환한다")
+    @Test
+    void shouldReturnSix_whenAllNumbersMatch() {
+        // given
+        Lotto lotto = new Lotto(List.of(1, 2, 3, 10, 11, 12));
+        List<Integer> numbers = List.of(1, 2, 3, 10, 11, 12);
+
+        // when & then
+        assertThat(lotto.countMatchingNumbers(numbers)).isEqualTo(6);
+    }
+
+    @DisplayName("일부 번호만 일치하면 일치 개수를 반환한다")
+    @Test
+    void shouldReturnCorrectCount_whenSomeNumbersMatch() {
+        // given
+        Lotto lotto = new Lotto(List.of(1, 2, 3, 4, 5, 6));
+        List<Integer> numbers = List.of(1, 2, 7, 8, 9, 10);
+
+        // when & then
+        assertThat(lotto.countMatchingNumbers(numbers)).isEqualTo(2);
+    }
+
+    @DisplayName("전혀 일치하지 않으면 0을 반환한다")
+    @Test
+    void shouldReturnZero_whenNoNumbersMatch() {
+        // given
+        Lotto lotto = new Lotto(List.of(1, 2, 3, 4, 5, 6));
+        List<Integer> numbers = List.of(7, 8, 9, 10, 11, 12);
+
+        // when & then
+        assertThat(lotto.countMatchingNumbers(numbers)).isEqualTo(0);
+    }
+
 }

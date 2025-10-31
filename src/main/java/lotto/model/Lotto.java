@@ -18,6 +18,12 @@ public class Lotto {
     }
 
     // TODO: 추가 기능 구현
+    public int countMatchingNumbers(List<Integer> number) {
+        return (int) number.stream()
+                .filter(numbers::contains)
+                .count();
+    }
+
     private void checkDuplicate(List<Integer> numbers) {
         long distinctCount = numbers.stream().distinct().count();
         if (distinctCount != numbers.size()) {
