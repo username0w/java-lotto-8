@@ -20,6 +20,14 @@ public enum Rank {
         this.prize = prize;
     }
 
+    public int getEqualLottoNumberCount() {
+        return equalLottoNumberCount;
+    }
+
+    public boolean isHasBonusNumber() {
+        return hasBonusNumber;
+    }
+
     public int getPrize() {
         return prize;
     }
