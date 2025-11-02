@@ -22,6 +22,20 @@ class LottoTest {
     }
 
     // TODO: 추가 기능 구현에 따른 테스트 코드 작성
+    @DisplayName("로또 번호에 1보다 작은 숫자가 있으면 예외가 발생한다.")
+    @Test
+    void 로또_번호에_1보다_작은_숫자가_있으면_예외가_발생한다() {
+        assertThatThrownBy(() -> new Lotto(List.of(0, 2, 3, 4, 5, 5)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("로또 번호에 45보다 큰 숫자가 있으면 예외가 발생한다.")
+    @Test
+    void 로또_번호에_45보다_큰_숫자가_있으면_예외가_발생한다() {
+        assertThatThrownBy(() -> new Lotto(List.of(46, 2, 3, 4, 5, 5)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @DisplayName("모든 번호가 일치하면 6을 반환한다")
     @Test
     void shouldReturnSix_whenAllNumbersMatch() {
