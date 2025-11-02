@@ -1,25 +1,23 @@
 package lotto.model;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.Collections;
 import java.util.Map;
 
 public class LottoResult {
 
-    private final Map<Rank, Integer> result = new HashMap<>();
+    private final Map<Rank, Integer> result;
+    private final double profitRate;
 
-    public LottoResult() {
+    public LottoResult(Map<Rank, Integer> result, double profitRate) {
+        this.result = Collections.unmodifiableMap(result);
+        this.profitRate = profitRate;
     }
 
-    public Map<Rank, Integer> calculate(List<LottoTicket> tickets, WinningNumbers winningNumbers) {
-        for (LottoTicket ticket : tickets) {
-            int equalNumbers = winningNumbers.countMatchingNumbers(ticket.getNumbers());
-            boolean bonus = winningNumbers.hasBonusNumber(ticket.getNumbers());
-            Rank rank = Rank.findRankByEqualLottoCountAndBonus(equalNumbers, bonus);
-            if (rank != null) {
-                result.put(rank, result.getOrDefault(rank, 0) + 1);
-            }
-        }
-        return Map.copyOf(result);
+    public Map<Rank, Integer> getResult() {
+        return result;
+    }
+
+    public double getProfitRate() {
+        return profitRate;
     }
 }

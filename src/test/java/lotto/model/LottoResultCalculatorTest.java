@@ -7,7 +7,7 @@ import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class LottoResultTest {
+class LottoResultCalculatorTest {
 
     @DisplayName("1등과 2등 결과가 올바르게 계산된다")
     @Test
@@ -19,12 +19,15 @@ class LottoResultTest {
                 new Lotto(List.of(1, 2, 3, 4, 5, 6)),
                 new Bonus(7)
         );
+        int totalMoney = 2000;
 
         // when
-        LottoResult lottoResult = new LottoResult();
-        Map<Rank, Integer> result = lottoResult.calculate(List.of(ticket1, ticket2), winningNumbers);
+        LottoResultCalculator lottoResultCalculator = new LottoResultCalculator();
+        LottoResult lottoResult = lottoResultCalculator.calculate(List.of(ticket1, ticket2), winningNumbers,
+                totalMoney);
 
         // then
+        Map<Rank, Integer> result = lottoResult.getResult();
         assertThat(result.get(Rank.FIRST)).isEqualTo(1);
         assertThat(result.get(Rank.SECOND)).isEqualTo(1);
     }
@@ -38,12 +41,14 @@ class LottoResultTest {
                 new Lotto(List.of(1, 2, 3, 4, 5, 6)),
                 new Bonus(7)
         );
+        int totalMoney = 1000;
 
         // when
-        LottoResult lottoResult = new LottoResult();
-        Map<Rank, Integer> result = lottoResult.calculate(List.of(ticket), winningNumbers);
+        LottoResultCalculator lottoResultCalculator = new LottoResultCalculator();
+        LottoResult lottoResult = lottoResultCalculator.calculate(List.of(ticket), winningNumbers, totalMoney);
 
         // then
+        Map<Rank, Integer> result = lottoResult.getResult();
         assertThat(result).doesNotContainKeys(Rank.FIRST, Rank.SECOND, Rank.THIRD, Rank.FOURTH, Rank.FIFTH);
     }
 
@@ -55,12 +60,14 @@ class LottoResultTest {
                 new Lotto(List.of(1, 2, 3, 4, 5, 6)),
                 new Bonus(7)
         );
+        int totalMoney = 0;
 
         // when
-        LottoResult lottoResult = new LottoResult();
-        Map<Rank, Integer> result = lottoResult.calculate(List.of(), winningNumbers);
+        LottoResultCalculator lottoResultCalculator = new LottoResultCalculator();
+        LottoResult lottoResult = lottoResultCalculator.calculate(List.of(), winningNumbers, totalMoney);
 
         // then
+        Map<Rank, Integer> result = lottoResult.getResult();
         assertThat(result).isEmpty();
     }
 
@@ -73,12 +80,15 @@ class LottoResultTest {
                 new Lotto(List.of(1, 2, 3, 4, 5, 6)),
                 new Bonus(7)
         );
+        int totalMoney = 1000;
 
         // when
-        LottoResult lottoResult = new LottoResult();
-        Map<Rank, Integer> result = lottoResult.calculate(List.of(ticket, ticket, ticket), winningNumbers);
+        LottoResultCalculator lottoResultCalculator = new LottoResultCalculator();
+        LottoResult lottoResult = lottoResultCalculator.calculate(List.of(ticket, ticket, ticket), winningNumbers,
+                totalMoney);
 
         // then
+        Map<Rank, Integer> result = lottoResult.getResult();
         assertThat(result.get(Rank.FIRST)).isEqualTo(3);
     }
 }

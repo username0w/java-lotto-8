@@ -20,6 +20,10 @@ public enum Rank {
         this.prize = prize;
     }
 
+    public int getPrize() {
+        return prize;
+    }
+
     public static Rank findRankByEqualLottoCountAndBonus(int equalLottoNumberCount, boolean hasBonusNumber) {
         return Arrays.stream(values())
                 .filter(value -> value.equalLottoNumberCount == equalLottoNumberCount)
