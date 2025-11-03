@@ -85,12 +85,45 @@ class ApplicationTest extends NsTest {
         );
     }
 
+    @DisplayName("금액 입력이 잘못되면 재입력 처리 후 정상 동작")
+    @Test
+    void shouldRetryMoneyInput_whenInvalid() {
+        assertSimpleTest(() -> {
+            run("1000j", "5000", "1,2,3,4,5,6", "7");
+
+            assertThat(output()).contains(ERROR_MESSAGE + " 숫자를 입력해야 합니다.");
+            assertThat(output()).contains("5개를 구매했습니다.");
+        });
+    }
+
+    @DisplayName("로또 번호 입력이 잘못되면 재입력 처리 후 정상 동작")
+    @Test
+    void shouldRetryLottoInput_whenInvalid() {
+        assertSimpleTest(() -> {
+            run("1000", "1,2,3,4,5", "1,2,3,4,5,6", "7");
+
+            assertThat(output()).contains(ERROR_MESSAGE + " 로또 번호는 6개여야 합니다.");
+            assertThat(output()).contains("1개를 구매했습니다.");
+        });
+    }
+
+    @DisplayName("보너스 번호가 잘못되면 재입력 처리 후 정상 동작")
+    @Test
+    void shouldRetryBonusInput_whenInvalid() {
+        assertSimpleTest(() -> {
+            run("1000", "1,2,3,4,5,6", "3", "7");
+
+            assertThat(output()).contains(ERROR_MESSAGE + " 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
+            assertThat(output()).contains("당첨 통계");
+        });
+    }
+
     @DisplayName("금액 입력이 잘못되면 예외 메시지를 출력한다")
     @Test
     void shouldThrowError_whenInvalidMoneyInput() {
         assertSimpleTest(() -> {
             runException("1000j");
-            assertThat(output()).contains("[ERROR] 숫자를 입력해야 합니다.");
+            assertThat(output()).contains(ERROR_MESSAGE + " 숫자를 입력해야 합니다.");
         });
     }
 
@@ -99,16 +132,7 @@ class ApplicationTest extends NsTest {
     void shouldThrowError_whenLottoNumberCountInvalid() {
         assertSimpleTest(() -> {
             runException("1000", "1,2,3,4,5", "7");
-            assertThat(output()).contains("[ERROR] 로또 번호는 6개여야 합니다.");
-        });
-    }
-
-    @DisplayName("보너스 번호가 당첨 번호와 겹치면 예외 메시지를 출력한다")
-    @Test
-    void shouldThrowError_whenBonusNumberOverlaps() {
-        assertSimpleTest(() -> {
-            runException("1000", "1,2,3,4,5,6", "3");
-            assertThat(output()).contains("[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
+            assertThat(output()).contains(ERROR_MESSAGE + " 로또 번호는 6개여야 합니다.");
         });
     }
 
@@ -117,7 +141,7 @@ class ApplicationTest extends NsTest {
     void shouldThrowError_whenDuplicateLottoNumbers() {
         assertSimpleTest(() -> {
             runException("1000", "1,1,2,3,4,5", "6");
-            assertThat(output()).contains("[ERROR] 로또 번호는 중복될 수 없습니다.");
+            assertThat(output()).contains(ERROR_MESSAGE + " 로또 번호는 중복될 수 없습니다.");
         });
     }
 
@@ -126,7 +150,7 @@ class ApplicationTest extends NsTest {
     void shouldThrowError_whenLottoNumberOutOfRange() {
         assertSimpleTest(() -> {
             runException("1000", "0,2,3,4,5,6", "7");
-            assertThat(output()).contains("[ERROR] 로또 번호는 1~45 사이여야 합니다.");
+            assertThat(output()).contains(ERROR_MESSAGE + " 로또 번호는 1~45 사이여야 합니다.");
         });
     }
 
@@ -135,7 +159,16 @@ class ApplicationTest extends NsTest {
     void shouldThrowError_whenBonusNumberOutOfRange() {
         assertSimpleTest(() -> {
             runException("1000", "1,2,3,4,5,6", "50");
-            assertThat(output()).contains("[ERROR] 보너스 번호는 1~45 사이여야 합니다.");
+            assertThat(output()).contains(ERROR_MESSAGE + " 보너스 번호는 1~45 사이여야 합니다.");
+        });
+    }
+
+    @DisplayName("보너스 번호가 당첨 번호와 겹치면 예외 메시지를 출력한다")
+    @Test
+    void shouldThrowError_whenBonusNumberOverlaps() {
+        assertSimpleTest(() -> {
+            runException("1000", "1,2,3,4,5,6", "3");
+            assertThat(output()).contains(ERROR_MESSAGE + " 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
         });
     }
 
