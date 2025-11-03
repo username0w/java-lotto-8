@@ -7,6 +7,7 @@ import lotto.model.LotteryMachine;
 import lotto.model.Lotto;
 import lotto.model.LottoResult;
 import lotto.model.LottoResultCalculator;
+import lotto.model.LottoTicket;
 import lotto.model.Money;
 import lotto.model.WinningNumbers;
 import lotto.view.InputView;
@@ -30,13 +31,13 @@ public class LottoController {
     public void run() {
         Money money = readUntilValid(this::readMoney);
 
-        lotteryMachine.buyTickets(money.calculateTicketCount());
-        outputView.printLottoTickets(lotteryMachine.getTickets());
+        List<LottoTicket> tickets = lotteryMachine.buyTickets(money.calculateTicketCount());
+        outputView.printLottoTickets(tickets);
 
         WinningNumbers winningNumbers = readWinningNumbers();
 
         LottoResult result = lottoResultCalculator.calculate(
-                lotteryMachine.getTickets(), winningNumbers, money.getAmount()
+                tickets, winningNumbers, money.getAmount()
         );
 
         outputView.printLottoResult(result);

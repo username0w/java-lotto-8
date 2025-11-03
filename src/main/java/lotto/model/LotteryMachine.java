@@ -7,19 +7,15 @@ import java.util.List;
 
 public class LotteryMachine {
 
-    private final List<LottoTicket> tickets;
+    private static final int MIN_NUMBER = 1;
+    private static final int MAX_NUMBER = 45;
+    private static final int NUMBERS_PER_TICKET = 6;
 
-    public LotteryMachine() {
-        this.tickets = new ArrayList<>();
-    }
-
-    public void buyTickets(int count) {
+    public List<LottoTicket> buyTickets(int count) {
+        List<LottoTicket> tickets = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             tickets.add(createLottoTicket());
         }
-    }
-
-    public List<LottoTicket> getTickets() {
         return Collections.unmodifiableList(tickets);
     }
 
@@ -28,8 +24,6 @@ public class LotteryMachine {
     }
 
     private List<Integer> generateRandomNumbers() {
-        return Randoms.pickUniqueNumbersInRange(1, 45, 6);
+        return Randoms.pickUniqueNumbersInRange(MIN_NUMBER, MAX_NUMBER, NUMBERS_PER_TICKET);
     }
 }
-
-

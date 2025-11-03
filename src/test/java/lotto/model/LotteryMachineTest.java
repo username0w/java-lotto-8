@@ -2,6 +2,7 @@ package lotto.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,9 +16,9 @@ class LotteryMachineTest {
 
         // when
         LotteryMachine lotteryMachine = new LotteryMachine();
-        lotteryMachine.buyTickets(ticketCounts);
+        List<LottoTicket> tickets = lotteryMachine.buyTickets(ticketCounts);
 
         // then
-        assertThat(lotteryMachine.getTickets()).hasSize(ticketCounts);
+        assertThat(tickets).hasSize(ticketCounts);
     }
 }
