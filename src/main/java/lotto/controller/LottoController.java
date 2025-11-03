@@ -30,7 +30,7 @@ public class LottoController {
     public void run() {
         Money money = readUntilValid(this::readMoney);
 
-        lotteryMachine.buyTickets(money.getTicketCount());
+        lotteryMachine.buyTickets(money.calculateTicketCount());
         outputView.printLottoTickets(lotteryMachine.getTickets());
 
         WinningNumbers winningNumbers = readWinningNumbers();
