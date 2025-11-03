@@ -165,7 +165,6 @@
 | 당첨 번호  | 1~45 범위를 벗어난 숫자가 포함된 경우 | `IllegalArgumentException` |
 | 당첨 번호  | 숫자가 아닌 문자가 포함된 경우       | `IllegalArgumentException` |
 | 당첨 번호  | 중복된 숫자가 존재하는 경우         | `IllegalArgumentException` |
-| 보너스 번호 | 1개가 아닌 값을 입력한 경우        | `IllegalArgumentException` |
 | 보너스 번호 | 1~45 범위를 벗어난 숫자를 입력한 경우 | `IllegalArgumentException` |
 | 보너스 번호 | 숫자가 아닌 문자를 입력한 경우       | `IllegalArgumentException` |
 | 보너스 번호 | 당첨 번호와 중복되는 숫자를 입력한 경우  | `IllegalArgumentException` |
