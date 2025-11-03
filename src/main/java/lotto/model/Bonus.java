@@ -11,6 +11,10 @@ public class Bonus {
         this.bonus = bonus;
     }
 
+    public int getBonus() {
+        return bonus;
+    }
+
     public boolean hasBonusNumbers(List<Integer> numbers) {
         return numbers.contains(bonus);
     }

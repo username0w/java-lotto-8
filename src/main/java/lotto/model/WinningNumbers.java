@@ -8,6 +8,7 @@ public class WinningNumbers {
     private final Bonus bonus;
 
     public WinningNumbers(Lotto lotto, Bonus bonus) {
+        validateNoOverlap(lotto, bonus);
         this.lotto = lotto;
         this.bonus = bonus;
     }
@@ -18,5 +19,11 @@ public class WinningNumbers {
 
     public boolean hasBonusNumber(List<Integer> ticketNumbers) {
         return bonus.hasBonusNumbers(ticketNumbers);
+    }
+
+    private void validateNoOverlap(Lotto lotto, Bonus bonus) {
+        if (lotto.getNumbers().contains(bonus.getBonus())) {
+            throw new IllegalArgumentException("[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
+        }
     }
 }
