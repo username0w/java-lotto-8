@@ -1,6 +1,7 @@
 package lotto.controller;
 
 import java.util.List;
+import java.util.function.Supplier;
 import lotto.model.Bonus;
 import lotto.model.LotteryMachine;
 import lotto.model.Lotto;
@@ -27,7 +28,7 @@ public class LottoController {
     }
 
     public void run() {
-        Money money = readTotalMoney();
+        Money money = readUntilValid(this::readMoney);
 
         lotteryMachine.buyTickets(money.getTicketCount());
         outputView.printLottoTickets(lotteryMachine.getTickets());
@@ -41,13 +42,10 @@ public class LottoController {
         outputView.printLottoResult(result);
     }
 
-    private Money readTotalMoney() {
+    private <T> T readUntilValid(Supplier<T> inputSupplier) {
         while (true) {
             try {
-                outputView.printMoneyInputMessage();
-                String input = inputView.readMoneyInput();
-                int amount = Integer.parseInt(input);
-                return new Money(amount);
+                return inputSupplier.get();
             } catch (NumberFormatException e) {
                 outputView.printError("숫자를 입력해야 합니다.");
             } catch (IllegalArgumentException e) {
@@ -56,8 +54,16 @@ public class LottoController {
         }
     }
 
+    private Money readMoney() {
+        outputView.printMoneyInputMessage();
+        String input = inputView.readMoneyInput();
+        int amount = Integer.parseInt(input);
+        return new Money(amount);
+    }
+
     private WinningNumbers readWinningNumbers() {
-        Lotto winningLotto = readWinningLottoNumbers();
+        Lotto winningLotto = readUntilValid(this::readWinningLotto);
+
         while (true) {
             try {
                 Bonus bonus = readBonusNumber();
@@ -68,48 +74,28 @@ public class LottoController {
         }
     }
 
-    private Lotto readWinningLottoNumbers() {
-        while (true) {
-            try {
-                outputView.printLottoInputMessage();
-                String lottoInput = inputView.readLottoInput();
-                List<Integer> lottoNumbers = parseLottoNumbers(lottoInput);
-                return new Lotto(lottoNumbers);
-            } catch (NumberFormatException e) {
-                outputView.printError("숫자를 입력해야 합니다.");
-            } catch (IllegalArgumentException e) {
-                outputView.printError(e.getMessage());
-            }
-        }
+    private Lotto readWinningLotto() {
+        outputView.printLottoInputMessage();
+        String input = inputView.readLottoInput();
+        List<Integer> numbers = parseLottoNumbers(input);
+        return new Lotto(numbers);
     }
 
     private Bonus readBonusNumber() {
-        while (true) {
-            try {
-                outputView.printBonusInputMessage();
-                String bonusInput = inputView.readBonusInput();
-                int bonusNumber = Integer.parseInt(bonusInput);
-                return new Bonus(bonusNumber);
-            } catch (NumberFormatException e) {
-                outputView.printError("숫자를 입력해야 합니다.");
-            } catch (IllegalArgumentException e) {
-                outputView.printError(e.getMessage());
-            }
-        }
+        outputView.printBonusInputMessage();
+        String input = inputView.readBonusInput();
+        int bonusNumber = Integer.parseInt(input);
+        return new Bonus(bonusNumber);
     }
 
     private List<Integer> parseLottoNumbers(String input) {
-        try {
-            String[] parts = input.split(",");
-            if (parts.length != 6) {
-                throw new IllegalArgumentException("로또 번호는 6개여야 합니다.");
-            }
-            return java.util.Arrays.stream(parts)
-                    .map(String::trim)
-                    .map(Integer::parseInt)
-                    .toList();
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("숫자를 입력해야 합니다.");
+        String[] parts = input.split(",");
+        if (parts.length != 6) {
+            throw new IllegalArgumentException("로또 번호는 6개여야 합니다.");
         }
+        return java.util.Arrays.stream(parts)
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .toList();
     }
 }
