@@ -20,10 +20,10 @@ public class Money {
 
     private void validate(int amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("[ERROR] 금액은 0보다 커야 합니다.");
+            throw new IllegalArgumentException("금액은 0보다 커야 합니다.");
         }
         if (amount % LOTTO_PRICE != 0) {
-            throw new IllegalArgumentException("[ERROR] 금액은 1000원 단위로 입력해야 합니다.");
+            throw new IllegalArgumentException("금액은 1000원 단위로 입력해야 합니다.");
         }
     }
 }
