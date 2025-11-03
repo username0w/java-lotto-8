@@ -41,6 +41,24 @@ class LottoTest {
                 .hasMessageContaining("1~45 사이");
     }
 
+    @DisplayName("숫자를 포함하면 true를 반환한다")
+    @Test
+    void shouldReturnTrue_whenNumberIsInLotto() {
+        Lotto lotto = new Lotto(List.of(1, 2, 3, 10, 11, 12));
+        int number = 1;
+
+        assertThat(lotto.containsNumber(number)).isTrue();
+    }
+
+    @DisplayName("숫자를 포함하지 않으면 false를 반환한다")
+    @Test
+    void shouldReturnFalse_whenNumberIsNotInLotto() {
+        Lotto lotto = new Lotto(List.of(1, 2, 3, 10, 11, 12));
+        int number = 15;
+
+        assertThat(lotto.containsNumber(number)).isFalse();
+    }
+
     @DisplayName("모든 번호가 일치하면 6을 반환한다")
     @Test
     void shouldReturnSix_whenAllNumbersMatch() {

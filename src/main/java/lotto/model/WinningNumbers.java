@@ -22,7 +22,7 @@ public class WinningNumbers {
     }
 
     private void validateNoOverlap(Lotto lotto, Bonus bonus) {
-        if (lotto.getNumbers().contains(bonus.getBonus())) {
+        if (lotto.containsNumber(bonus.bonus())) {
             throw new IllegalArgumentException("[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
         }
     }

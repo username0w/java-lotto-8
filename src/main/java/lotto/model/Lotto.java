@@ -7,11 +7,17 @@ public class Lotto {
 
     public Lotto(List<Integer> numbers) {
         validate(numbers);
-        this.numbers = numbers;
+        this.numbers = List.copyOf(numbers);
     }
 
-    public List<Integer> getNumbers() {
-        return List.copyOf(numbers);
+    public boolean containsNumber(int num) {
+        return numbers.contains(num);
+    }
+
+    public int countMatchingNumbers(List<Integer> number) {
+        return (int) number.stream()
+                .filter(numbers::contains)
+                .count();
     }
 
     private void validate(List<Integer> numbers) {
@@ -20,12 +26,6 @@ public class Lotto {
         }
         checkDuplicate(numbers);
         checkNumberRange(numbers);
-    }
-
-    public int countMatchingNumbers(List<Integer> number) {
-        return (int) number.stream()
-                .filter(numbers::contains)
-                .count();
     }
 
     private void checkDuplicate(List<Integer> numbers) {
