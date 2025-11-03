@@ -6,46 +6,107 @@ import lotto.model.LotteryMachine;
 import lotto.model.Lotto;
 import lotto.model.LottoResult;
 import lotto.model.LottoResultCalculator;
+import lotto.model.Money;
 import lotto.model.WinningNumbers;
+import lotto.view.InputView;
+import lotto.view.OutputView;
 
 public class LottoController {
 
+    private final InputView inputView;
+    private final OutputView outputView;
+
+    public LottoController(InputView inputView, OutputView outputView) {
+        this.inputView = inputView;
+        this.outputView = outputView;
+    }
+
     public void run() {
-
-        // 1. 구입 금액 입력
-        String inputMoney = "10000";
-        // 검증
-        int totalMoney = 10000;
-
-        // 장 수 계산
-        int ticketCount = 10;
+        Money money = readTotalMoney();
 
         LotteryMachine lotteryMachine = new LotteryMachine();
-        lotteryMachine.buyTickets(ticketCount);
-        // 2. 자동 발매 번호 출력
+        lotteryMachine.buyTickets(money.getTicketCount());
+        outputView.printLottoTickets(lotteryMachine.getTickets());
 
-        // 3. 로또 번호 입력
-        List<Integer> lottoNumber = List.of(1, 2, 3, 4, 5, 6);
-        // 검증
-        Lotto lotto = new Lotto(lottoNumber);
+        WinningNumbers winningNumbers = readWinningNumbers();
 
-        // 4. 보너스 번호 입력
-        int bonusNumber = 9;
-        // 검증
-        Bonus bonus = new Bonus(bonusNumber);
-
-        // 당첨 번호 객체 만들기
-        WinningNumbers winningNumbers = new WinningNumbers(lotto, bonus);
-
-        // 5. 결과 계산
-        // lotteryMachine 의 LottoTicket 리스트를 넘긴다.
         LottoResultCalculator lottoResultCalculator = new LottoResultCalculator();
+        LottoResult result = lottoResultCalculator.calculate(
+                lotteryMachine.getTickets(), winningNumbers, money.getAmount()
+        );
 
-        // result 에서 outputview 로 값을 꺼내서 넘긴다.
-        LottoResult result = lottoResultCalculator.calculate(lotteryMachine.getTickets(), winningNumbers, totalMoney);
+        outputView.printLottoResult(result);
+    }
 
-        System.out.println("result : " + result.getResult());
-        System.out.println("profitRate : " + result.getProfitRate());
-        // 5. 결과 출력
+    private Money readTotalMoney() {
+        while (true) {
+            try {
+                outputView.printMoneyInputMessage();
+                String input = inputView.readMoneyInput();
+                int amount = Integer.parseInt(input);
+                return new Money(amount);
+            } catch (NumberFormatException e) {
+                outputView.printError("[ERROR] 숫자를 입력해야 합니다.");
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
+    private WinningNumbers readWinningNumbers() {
+        Lotto winningLotto = readWinningLottoNumbers();
+        while (true) {
+            try {
+                Bonus bonus = readBonusNumber();
+                return new WinningNumbers(winningLotto, bonus);
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
+    private Lotto readWinningLottoNumbers() {
+        while (true) {
+            try {
+                outputView.printLottoInputMessage();
+                String lottoInput = inputView.readLottoInput();
+                List<Integer> lottoNumbers = parseLottoNumbers(lottoInput);
+                return new Lotto(lottoNumbers);
+            } catch (NumberFormatException e) {
+                outputView.printError("[ERROR] 숫자를 입력해야 합니다.");
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
+    private Bonus readBonusNumber() {
+        while (true) {
+            try {
+                outputView.printBonusInputMessage();
+                String bonusInput = inputView.readBonusInput();
+                int bonusNumber = Integer.parseInt(bonusInput);
+                return new Bonus(bonusNumber);
+            } catch (NumberFormatException e) {
+                outputView.printError("[ERROR] 숫자를 입력해야 합니다.");
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
+        }
+    }
+
+    private List<Integer> parseLottoNumbers(String input) {
+        try {
+            String[] parts = input.split(",");
+            if (parts.length != 6) {
+                throw new IllegalArgumentException("[ERROR] 로또 번호는 6개여야 합니다.");
+            }
+            return java.util.Arrays.stream(parts)
+                    .map(String::trim)
+                    .map(Integer::parseInt)
+                    .toList();
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("[ERROR] 숫자를 입력해야 합니다.");
+        }
     }
 }

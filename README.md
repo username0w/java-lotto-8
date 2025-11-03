@@ -185,3 +185,4 @@
 - WinningNumbers
 - Rank
 - LottoResultCalculator
+- Money
