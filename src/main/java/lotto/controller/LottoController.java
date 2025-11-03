@@ -15,22 +15,25 @@ public class LottoController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final LotteryMachine lotteryMachine;
+    private final LottoResultCalculator lottoResultCalculator;
 
-    public LottoController(InputView inputView, OutputView outputView) {
+    public LottoController(InputView inputView, OutputView outputView,
+                           LotteryMachine lotteryMachine, LottoResultCalculator lottoResultCalculator) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.lotteryMachine = lotteryMachine;
+        this.lottoResultCalculator = lottoResultCalculator;
     }
 
     public void run() {
         Money money = readTotalMoney();
 
-        LotteryMachine lotteryMachine = new LotteryMachine();
         lotteryMachine.buyTickets(money.getTicketCount());
         outputView.printLottoTickets(lotteryMachine.getTickets());
 
         WinningNumbers winningNumbers = readWinningNumbers();
 
-        LottoResultCalculator lottoResultCalculator = new LottoResultCalculator();
         LottoResult result = lottoResultCalculator.calculate(
                 lotteryMachine.getTickets(), winningNumbers, money.getAmount()
         );
